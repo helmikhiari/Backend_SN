@@ -70,3 +70,12 @@ exports.deleteProductByID = async (id) => {
     }
 }
 
+exports.updateProduct = async (ID, dataToUpdate) => {
+    try {
+        const updatedData = await productModel.findByIdAndUpdate(ID, dataToUpdate, { new: true })
+        return !!updatedData
+    } catch (error) {
+        console.log("Error is " + error);
+        return false;
+    }
+}

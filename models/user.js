@@ -18,11 +18,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    
+    Prevpassword:String,
+
     wishlist: [
         { type: mongoose.Schema.Types.ObjectId, ref: "product" }
     ],
-    cart: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "cartList" }
+    cartList: [
+        { type: mongoose.Schema.Types.ObjectId, ref: "cart" }
     ],
     orders: [
         { type: mongoose.Schema.Types.ObjectId, ref: "orderList" }

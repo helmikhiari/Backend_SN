@@ -1,3 +1,4 @@
+const { findByIdAndUpdate } = require('../models/productDetails');
 const productService = require('../services/productService')
 exports.addProduct = async (req, res) => {
     try {
@@ -38,20 +39,36 @@ exports.getAllProducts = async (req, res) => {
     }
 }
 
-exports.deleteProductByID=async(req,res)=>
-{   
+exports.deleteProductByID = async (req, res) => {
     try {
-        const {ID}=req.params;
-        const exist=await productService.checkProductExistence(ID)
-        if (!exist)
-        {
-            return res.status(404).json({message:"Product Not Found"})
+        const { ID } = req.params;
+        const exist = await productService.checkProductExistence(ID)
+        if (!exist) {
+            return res.status(404).json({ message: "Product Not Found" })
         }
-        const deleted=await productService.deleteProductByID(ID)
+        const deleted = await productService.deleteProductByID(ID)
         if (!deleted)
-            return res.status(403).json({message:"Can't Delete product , productDetails must be deleted first"})
-        return res.status(200).json({message:"Product Deleted!"})
+            return res.status(403).json({ message: "Can't Delete product , productDetails must be deleted first" })
+        return res.status(200).json({ message: "Product Deleted!" })
     } catch (error) {
-        console.log('Error is '+error);
+        console.log('Error is ' + error);
+    }
+}
+
+exports.updateProduct = async (req, res) => {
+    try {
+        const { ID } = req.params;
+        const exist = await productService.checkProductExistence(ID)
+        if (!exist) {
+            return res.status(404).json({ message: "Product Not Found" })
+        }
+        const updated = await productService.updateProduct(ID, req.body);
+        if (!updated) {
+            return res.status(400).json({ message: "Error while updating" });
+        }
+        return res.status(200).json({ message: "Product Updated!" });
+    } catch (error) {
+        console.log("Error is " + error);
+        return res.status(500).json({ message: error.message });
     }
 }
