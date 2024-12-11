@@ -121,3 +121,15 @@ exports.toggleWishList = async (req, res) => {
 
     }
 }
+
+exports.purchase = async (req, res) => {
+    try {
+        const rep = await userService.purchase(req.userID);
+        if (!rep) {
+            return res.status(403).json({ message: "Purchase Failed" })
+        }
+        return res.status(201).json({ message: "Purchase Confirmed" })
+    } catch (error) {
+        console.log("Error : " + error)
+    }
+}

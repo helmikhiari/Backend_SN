@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    
-    Prevpassword:String,
+
+    code: String,
 
     wishlist: [
         { type: mongoose.Schema.Types.ObjectId, ref: "product" }

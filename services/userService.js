@@ -1,6 +1,10 @@
 const userModel = require("../models/user");
 const bcrypt = require("bcryptjs");
 const cartModel = require("../models/cart");
+const orderListModel = require("../models/ordersList");
+const orderModel = require("../models/order");
+const cart = require("../models/cart");
+const productDetailsModel = require("../models/productDetails")
 exports.checkUserExists = async (email) => {
     try {
         const user = await userModel.findOne({ email });
@@ -140,6 +144,46 @@ exports.toggleWishList = async (userID, ProductID) => {
         }
 
 
+    } catch (error) {
+        console.log("Error is " + error);
+        return false;
+    }
+}
+
+exports.purchase = async (userID) => {
+    try {
+        let total = 0;
+        const user = await userModel.findById(userID)
+            .populate({ path: "cartList", select: "quantity productDetailsID", populate: { path: "productDetailsID", select: "productDetailsID quantity", populate: { path: "productID", select: "price" } } })
+        const ordersList = new orderListModel({ userID: user });
+
+        for (let cart of user.cartList) {
+            console.log(cart)
+            total += cart.productDetailsID.productID.price * cart.quantity;
+            let newOrder = new orderModel({ quantity: cart.quantity, productDetailsID: cart.productDetailsID, orderListID: ordersList });
+            ordersList.orders.push(newOrder);
+            await newOrder.save();
+            let productDetails = await productDetailsModel.findById(cart.productDetailsID._id)
+            productDetails.stock -= cart.quantity;
+            await productDetails.save();
+        }
+        ordersList.totalPrice = total;
+        await ordersList.save();
+        user.cartList = [];
+        user.orders.push(ordersList);
+        await user.save();
+        return true;
+    } catch (error) {
+        console.log('Error is ' + error);
+        return false;
+    }
+}
+exports.updateUser = async (email, key, value) => {
+    try {
+        const user = await userModel.findOne({ email });
+        user[key] = value;
+        await user.save();
+        return true;
     } catch (error) {
         console.log("Error is " + error);
         return false;

@@ -13,7 +13,9 @@ const ordersListSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "order"
         }
-    ]
+    ],
+
+    totalPrice: Number
 
 }, { timestamps: true, versionKey: false })
 
