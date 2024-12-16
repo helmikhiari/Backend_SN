@@ -21,13 +21,13 @@ const userSchema = new mongoose.Schema({
 
     code: String,
 
-    wishlist: [
+    wishList: [
         { type: mongoose.Schema.Types.ObjectId, ref: "product" }
     ],
     cartList: [
         { type: mongoose.Schema.Types.ObjectId, ref: "cart" }
     ],
-    orders: [
+    orderList: [
         { type: mongoose.Schema.Types.ObjectId, ref: "orderList" }
     ]
 }, { versionKey: false, timestamps: true })

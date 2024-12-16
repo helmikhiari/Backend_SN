@@ -31,8 +31,9 @@ exports.register = async (email, lastName, firstName, password) => {
 
 exports.getUserByID = async (userID) => {
     try {
-        const user = await userModel.findById(userID).select("firstName lastName email")
-
+        const user = await userModel.findById(userID).select("firstName lastName email cartList wishList orderList")
+            .populate({ path: "cartList", select: "quantity productDetailsID" }).
+            populate({ path: "orderList", select: "totalPrice createdAt", populate: { path: "orders", select: "quantity productDetailsID" } })
         return user;
     } catch (error) {
         console.log("error is " + error)
@@ -75,7 +76,7 @@ exports.changePassword = async (userID, newPassword) => {
 
 exports.addToCart = async (userID, productDetailsID, quantity) => {
     try {
-        const cart = await cartModel.findOne({ productDetailsID });
+        const cart = await cartModel.findOne({ productDetailsID, userID });
         if (cart) {
             cart.quantity += quantity;
             await cart.save();
@@ -131,14 +132,14 @@ exports.updateCart = async (cartID, quantity) => {
 exports.toggleWishList = async (userID, ProductID) => {
     try {
         const user = await userModel.findById(userID);
-        const exist = user.wishlist.includes(ProductID);
+        const exist = user.wishList.includes(ProductID);
         if (exist) {
-            user.wishlist = user.wishlist.filter((item) => item != ProductID);
+            user.wishList = user.wishList.filter((item) => item != ProductID);
             await user.save();
             return "Deleted From WishList"
         }
         else {
-            user.wishlist.push(ProductID);
+            user.wishList.push(ProductID);
             await user.save();
             return "Added to WishList";
         }
@@ -166,11 +167,12 @@ exports.purchase = async (userID) => {
             let productDetails = await productDetailsModel.findById(cart.productDetailsID._id)
             productDetails.stock -= cart.quantity;
             await productDetails.save();
+            await cartModel.findByIdAndDelete(cart._id)
         }
         ordersList.totalPrice = total;
         await ordersList.save();
         user.cartList = [];
-        user.orders.push(ordersList);
+        user.orderList.push(ordersList);
         await user.save();
         return true;
     } catch (error) {

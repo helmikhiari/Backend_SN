@@ -19,4 +19,4 @@ const ordersListSchema = new mongoose.Schema({
 
 }, { timestamps: true, versionKey: false })
 
-module.exports = mongoose.model("ordersList", ordersListSchema);
+module.exports = mongoose.model("orderList", ordersListSchema);

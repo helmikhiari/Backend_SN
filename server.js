@@ -2,8 +2,12 @@ const express = require("express");
 const dotenv = require('dotenv');
 const { Connect_DB } = require("./DB_Connection")
 const routes = require("./routes/index");
+const cors = require("cors")
 const app = express();
 dotenv.config();
+
+app.use(cors("http://localhost:3000"))
+
 app.use(express.json());
 Connect_DB();
 
