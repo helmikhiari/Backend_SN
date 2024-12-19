@@ -85,7 +85,7 @@ exports.addToCart = async (userID, productDetailsID, quantity) => {
             const user = await userModel.findById(userID);
             const newCart = new cartModel({ productDetailsID, quantity, userID: user });
             user.cartList.push(newCart);
-            await user.save();
+            await user.save();              
             await newCart.save();
         }
         return true;
