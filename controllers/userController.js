@@ -73,7 +73,8 @@ exports.addToCart = async (req, res) => {
         const added = await userService.addToCart(req.userID, productDetailID, quantity);
         if (!added)
             return res.status(400).json({ message: "Error Occured" });
-        return res.status(201).json({ message: "Product added to cart" });
+        console.log(added);
+        return res.status(201).json(added);
     } catch (error) {
 
     }
@@ -81,7 +82,7 @@ exports.addToCart = async (req, res) => {
 
 exports.deleteFromCart = async (req, res) => {
     try {
-        console.log("Made it here")
+
         const deleted = await userService.deleteFromCart(req.userID, req.params.cartID);
         if (!deleted) {
             return res.status(404).json({ message: "Cart Not Found" });

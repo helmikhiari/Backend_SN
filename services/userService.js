@@ -76,19 +76,19 @@ exports.changePassword = async (userID, newPassword) => {
 
 exports.addToCart = async (userID, productDetailsID, quantity) => {
     try {
-        const cart = await cartModel.findOne({ productDetailsID, userID });
-        if (cart) {
-            cart.quantity += quantity;
-            await cart.save();
-        }
-        else {
-            const user = await userModel.findById(userID);
-            const newCart = new cartModel({ productDetailsID, quantity, userID: user });
-            user.cartList.push(newCart);
-            await user.save();              
-            await newCart.save();
-        }
-        return true;
+        // const cart = await cartModel.findOne({ productDetailsID, userID });
+        // if (cart) {
+        //     cart.quantity += quantity;
+        //     await cart.save();
+        // }
+        // else {
+        const user = await userModel.findById(userID);
+        const newCart = new cartModel({ productDetailsID, quantity, userID: user });
+        user.cartList.push(newCart);
+        await user.save();
+        await newCart.save();
+        // }
+        return { _id: newCart._id, quantity: newCart.quantity, productDetailsID: newCart.productDetailsID };
     } catch (error) {
         console.log("Error is " + error);
         return false;
@@ -114,7 +114,9 @@ exports.deleteFromCart = async (userID, CartID) => {
 
 exports.updateCart = async (cartID, quantity) => {
     try {
+        console.log(cartID)
         const cart = await cartModel.findById(cartID).populate({ path: "productDetailsID", select: 'stock' });
+        console.log(cart);
         if (cart.quantity + quantity > cart.productDetailsID.stock)
             return false;
         if (cart.quantity + quantity <= 0)
