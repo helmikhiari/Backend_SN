@@ -39,7 +39,7 @@ exports.forgetPassword = async (req, res) => {
         console.log("Error is " + error);
     }
 }
-
+    
 exports.resetPassword = async (req, res) => {
     try {
         const { code, email } = req.user;
@@ -50,7 +50,7 @@ exports.resetPassword = async (req, res) => {
         }
         const codeIsTrue = await authService.checkCode(email, code)
         if (!codeIsTrue) {
-            return res.status(409).json({ message: "Invalid Code " })
+            return res.status(403).json({ message: "Invalid Code " })
         }
         const updated = await authService.changePassword(email, newPassword)
         if (!updated) {
