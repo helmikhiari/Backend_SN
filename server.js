@@ -13,7 +13,7 @@ Connect_DB();
 
 app.use(routes);
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 function callbackListen(err) {
     if (err)
