@@ -6,7 +6,7 @@ const cors = require("cors")
 const app = express();
 dotenv.config();
 
-// app.use(cors("http://localhost:3000"))
+app.use(cors("https://sneakercove.netlify.app"))
 
 app.use(express.json());
 Connect_DB();
