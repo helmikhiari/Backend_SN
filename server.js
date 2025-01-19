@@ -6,7 +6,7 @@ const cors = require("cors")
 const app = express();
 dotenv.config();
 
-app.use(cors("http://localhost:3000"))
+// app.use(cors("http://localhost:3000"))
 
 app.use(express.json());
 Connect_DB();
@@ -21,5 +21,9 @@ function callbackListen(err) {
     else
         console.log("App is Running on Port " + process.env.PORT)
 }
+
+app.get('/', (req, res) => {
+    res.send("Server Is Up!")
+})
 
 app.listen(process.env.PORT, callbackListen)
