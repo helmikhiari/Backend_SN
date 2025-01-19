@@ -4,6 +4,7 @@ const { Connect_DB } = require("./DB_Connection")
 const routes = require("./routes/index");
 const cors = require("cors")
 const app = express();
+const path = require('path')
 dotenv.config();
 
 app.use(cors())
