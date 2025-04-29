@@ -60,8 +60,8 @@ exports.getAllProducts = async () => {
 exports.deleteProductByID = async (id) => {
     try {
         const product = await productModel.findById(id)
-        if (product.productDetails.length != 0)
-            return false;
+        // if (product.productDetails.length != 0)
+        //     return false;
         await product.deleteOne();
         return true;
     } catch (error) {
